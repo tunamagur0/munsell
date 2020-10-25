@@ -126,14 +126,16 @@ const colorBuffer: WebGLBuffer = glUtil.createVbo(colorBufferData);
 glUtil.bindVbo(colorBuffer);
 glUtil.setAttribute(program, 'vertexColor', 4);
 
-const mvpMatrix: Float32Array = glUtil.getMvpMatrix(
+const vMatrix: Float32Array = glUtil.getViewMatrix(
   new Float32Array([4, 3, -3]),
   new Float32Array([0, 0, 0]),
-  new Float32Array([0, 1, 0]),
-  90,
-  0.1,
-  100
+  new Float32Array([0, 1, 0])
 );
+const pMatrix: Float32Array = glUtil.getProductionMatrix(90, 0.1, 100);
+const vpMatrix: Float32Array = glUtil.multiply(pMatrix, vMatrix);
+
+const mMatrix: Float32Array = glUtil.getIdentity();
+const mvpMatrix: Float32Array = glUtil.multiply(vpMatrix, mMatrix);
 glUtil.setUniform(program, mvpMatrix, 'mvpMatrix');
 
 const ibo: WebGLBuffer = glUtil.createIbo(vertexIndex);

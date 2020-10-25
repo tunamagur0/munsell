@@ -66,6 +66,42 @@ export default class GLUtil {
     return ibo;
   }
 
+  public getIdentity() {
+    return Mat4.identity(Mat4.create());
+  }
+
+  public getViewMatrix(
+    eye: Float32Array,
+    center: Float32Array,
+    up: Float32Array
+  ): Float32Array {
+    const vMatrix = Mat4.identity(Mat4.create());
+    Mat4.lookAt(eye, center, up, vMatrix);
+    return vMatrix;
+  }
+
+  public getProductionMatrix(
+    fovy: number,
+    near: number,
+    far: number
+  ): Float32Array {
+    const pMatrix = Mat4.identity(Mat4.create());
+    Mat4.perspective(
+      fovy,
+      this.canvas.width / this.canvas.height,
+      near,
+      far,
+      pMatrix
+    );
+    return pMatrix;
+  }
+
+  public multiply(a: Float32Array, b: Float32Array): Float32Array {
+    const ret = Mat4.create();
+    Mat4.multiply(a, b, ret);
+    return ret;
+  }
+
   public getMvpMatrix(
     eye: Float32Array,
     center: Float32Array,
