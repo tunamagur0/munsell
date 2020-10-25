@@ -1,5 +1,5 @@
 type ShaderType = 'vertex' | 'fragment';
-import { Mat4 } from 'minMatrix';
+import { Mat4 } from 'minmatrix';
 
 export default class GLUtil {
   private canvas: HTMLCanvasElement;
@@ -67,9 +67,9 @@ export default class GLUtil {
   }
 
   public getMvpMatrix(
-    eye: [number, number, number],
-    center: [number, number, number],
-    up: [number, number, number],
+    eye: Float32Array,
+    center: Float32Array,
+    up: Float32Array,
     fovy: number,
     near: number,
     far: number

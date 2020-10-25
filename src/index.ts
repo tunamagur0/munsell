@@ -127,9 +127,9 @@ glUtil.bindVbo(colorBuffer);
 glUtil.setAttribute(program, 'vertexColor', 4);
 
 const mvpMatrix: Float32Array = glUtil.getMvpMatrix(
-  [4, 3, -3],
-  [0, 0, 0],
-  [0, 1, 0],
+  new Float32Array([4, 3, -3]),
+  new Float32Array([0, 0, 0]),
+  new Float32Array([0, 1, 0]),
   90,
   0.1,
   100

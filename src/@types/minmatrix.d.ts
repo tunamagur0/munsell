@@ -1,4 +1,4 @@
-declare module 'minMatrix' {
+declare module 'minmatrix' {
   type TMat4 = Float32Array;
   type TVec3 = Float32Array;
   type TVec2 = Float32Array;
