@@ -14,14 +14,14 @@ declare module 'minmatrix' {
      * @param {TMat4} [source] - 単位化する行列
      * @return {TMat4} 単位化した行列
      */
-    static identity(source: TMat4): TMat4;
+    static identity(source?: TMat4): TMat4;
     /**
      * 行列の値をコピーして返す（第二引数が与えられた場合その行列がコピー先となる）
      * @param {TMat4} target - コピー元の行列
      * @param {TMat4} [source] - コピー先の行列
      * @return {TMat4} コピー先の行列
      */
-    static copy(target: TMat4, source: TMat4): TMat4;
+    static copy(target: TMat4, source?: TMat4): TMat4;
     /**
      * 行列を乗算して返す（第三引数が与えられた場合その行列に結果を代入する）
      * @param {TMat4} mat0 - 乗算される行列
@@ -29,7 +29,7 @@ declare module 'minmatrix' {
      * @param {TMat4} [source] - 乗算結果を格納する行列
      * @return {TMat4} 乗算結果の行列
      */
-    static multiply(mat0: TMat4, mat1: TMat4, source: TMat4): TMat4;
+    static multiply(mat0: TMat4, mat1: TMat4, source?: TMat4): TMat4;
     /**
      * 行列に拡大縮小を適用する（第三引数が与えられた場合その行列に結果を代入する）
      * @param {TMat4} mat - 適用を受ける行列
@@ -37,7 +37,7 @@ declare module 'minmatrix' {
      * @param {TMat4} [source] - 結果を格納する行列
      * @return {TMat4} 結果の行列
      */
-    static scale(mat: TMat4, vec: TVec3, source: TMat4): TMat4;
+    static scale(mat: TMat4, vec: TVec3, source?: TMat4): TMat4;
     /**
      * 行列に平行移動を適用する（第三引数が与えられた場合その行列に結果を代入する）
      * @param {TMat4} mat - 適用を受ける行列
@@ -45,7 +45,7 @@ declare module 'minmatrix' {
      * @param {TMat4} [source] - 結果を格納する行列
      * @return {TMat4} 結果の行列
      */
-    static translate(mat: TMat4, vec: TVec3, source: TMat4): TMat4;
+    static translate(mat: TMat4, vec: TVec3, source?: TMat4): TMat4;
     /**
      * 行列に回転を適用する（第四引数が与えられた場合その行列に結果を代入する）
      * @param {TMat4} mat - 適用を受ける行列
@@ -54,7 +54,12 @@ declare module 'minmatrix' {
      * @param {TMat4} [source] - 結果を格納する行列
      * @return {TMat4} 結果の行列
      */
-    static rotate(mat: TMat4, angle: number, axis: TVec3, source: TMat4): TMat4;
+    static rotate(
+      mat: TMat4,
+      angle: number,
+      axis: TVec3,
+      source?: TMat4
+    ): TMat4;
     /**
      * ビュー座標変換行列を生成する（第四引数が与えられた場合その行列に結果を代入する）
      * @param {TVec3} eye - 視点位置
@@ -63,7 +68,7 @@ declare module 'minmatrix' {
      * @param {TMat4} [source] - 結果を格納する行列
      * @return {TMat4} 結果の行列
      */
-    static lookAt(eye: TVec3, center: TVec3, up: TVec3, source: TMat4): TMat4;
+    static lookAt(eye: TVec3, center: TVec3, up: TVec3, source?: TMat4): TMat4;
     /**
      * 透視投影変換行列を生成する（第五引数が与えられた場合その行列に結果を代入する）
      * @param {number} fovy - 視野角（度数法）
@@ -78,7 +83,7 @@ declare module 'minmatrix' {
       aspect: number,
       near: number,
       far: number,
-      source: TMat4
+      source?: TMat4
     ): TMat4;
     /**
      * 正射影投影変換行列を生成する（第七引数が与えられた場合その行列に結果を代入する）
@@ -98,7 +103,7 @@ declare module 'minmatrix' {
       bottom: number,
       near: number,
       far: number,
-      source: TMat4
+      source?: TMat4
     ): TMat4;
     /**
      * 転置行列を生成する（第二引数が与えられた場合その行列に結果を代入する）
@@ -106,14 +111,14 @@ declare module 'minmatrix' {
      * @param {TMat4} [source] - 結果を格納する行列
      * @return {TMat4} 結果の行列
      */
-    static transpose(mat: TMat4, source: TMat4): TMat4;
+    static transpose(mat: TMat4, source?: TMat4): TMat4;
     /**
      * 逆行列を生成する（第二引数が与えられた場合その行列に結果を代入する）
      * @param {TMat4} mat - 適用する行列
      * @param {TMat4} [source] - 結果を格納する行列
      * @return {TMat4} 結果の行列
      */
-    static inverse(mat: TMat4, source: TMat4): TMat4;
+    static inverse(mat: TMat4, source?: TMat4): TMat4;
     /**
      * 行列にベクトルを乗算する（ベクトルに行列を適用する）
      * @param {TMat4} mat - 適用する行列
@@ -175,10 +180,10 @@ declare module 'minmatrix' {
       translation: TVec3,
       qtn: TQtn,
       scale: TVec3,
-      source: TMat4
+      source?: TMat4
     ): TMat4;
   }
-  export class TVec3 {
+  export class Vec3 {
     /**
      * ３つの要素を持つベクトルを生成する
      * @return {Float32Array} ベクトル格納用の配列
@@ -190,7 +195,7 @@ declare module 'minmatrix' {
      * @param {TVec3} [source] - コピー先のベクトル
      * @return {TVec3} コピー先のベクトル
      */
-    static copy(target: TVec3, source: TVec3): TVec3;
+    static copy(target: TVec3, source?: TVec3): TVec3;
     /**
      * ベクトルの長さ（大きさ）を返す
      * @param {TVec3} v - ３つの要素を持つベクトル
@@ -233,7 +238,7 @@ declare module 'minmatrix' {
      */
     static faceNormal(v0: TVec3, v1: TVec3, v2: TVec3): TVec3;
   }
-  export class TVec2 {
+  export class Vec2 {
     /**
      * ２つの要素を持つベクトルを生成する
      * @return {Float32Array} ベクトル格納用の配列
@@ -245,7 +250,7 @@ declare module 'minmatrix' {
      * @param {TVec2} [source] - コピー先のベクトル
      * @return {TVec2} コピー先のベクトル
      */
-    static copy(target: TVec2, source: TVec2): TVec2;
+    static copy(target: TVec2, source?: TVec2): TVec2;
     /**
      * ベクトルの長さ（大きさ）を返す
      * @param {TVec2} v - ２つの要素を持つベクトル
@@ -280,7 +285,7 @@ declare module 'minmatrix' {
      */
     static cross(v0: TVec2, v1: TVec2): number;
   }
-  export class TQtn {
+  export class Qtn {
     /**
      * ４つの要素からなるクォータニオンのデータ構造を生成する（虚部 x, y, z, 実部 w の順序で定義）
      * @return {Float32Array} クォータニオンデータ格納用の配列
@@ -291,27 +296,27 @@ declare module 'minmatrix' {
      * @param {TQtn} [source] - 初期化するクォータニオン
      * @return {TQtn} 結果のクォータニオン
      */
-    static identity(source: TQtn): TQtn;
+    static identity(source?: TQtn): TQtn;
     /**
      * クォータニオンの値をコピーして返す（第二引数が与えられた場合そのクォータニオンがコピー先となる）
      * @param {TQtn} target - コピー元のクォータニオン
      * @param {TQtn} [source] - コピー先のクォータニオン
      * @return {TQtn} コピー先のクォータニオン
      */
-    static copy(target: TQtn, source: TQtn): TQtn;
+    static copy(target: TQtn, source?: TQtn): TQtn;
     /**
      * 共役四元数を生成して返す（第二引数が与えられた場合そのクォータニオンに結果を代入する）
      * @param {TQtn} qtn - 元となるクォータニオン
      * @param {TQtn} [source] - 結果を格納するクォータニオン
      * @return {TQtn} 結果のクォータニオン
      */
-    static inverse(qtn: TQtn, source: TQtn): TQtn;
+    static inverse(qtn: TQtn, source?: TQtn): TQtn;
     /**
      * 虚部を正規化して返す
      * @param {TQtn} source - 元となるクォータニオン
      * @return {TQtn} 結果のクォータニオン
      */
-    static normalize(source: TQtn): TQtn;
+    static normalize(source?: TQtn): TQtn;
     /**
      * クォータニオンを乗算した結果を返す（第三引数が与えられた場合そのクォータニオンに結果を代入する）
      * @param {TQtn} qtn0 - 乗算されるクォータニオン
@@ -319,7 +324,7 @@ declare module 'minmatrix' {
      * @param {TQtn} [source] - 結果を格納するクォータニオン
      * @return {TQtn} 結果のクォータニオン
      */
-    static multiply(qtn0: TQtn, qtn1: TQtn, source: TQtn);
+    static multiply(qtn0: TQtn, qtn1: TQtn, source?: TQtn);
     /**
      * クォータニオンに回転を適用し返す（第三引数が与えられた場合そのクォータニオンに結果を代入する）
      * @param {number} angle - 回転する量（ラジアン）
@@ -327,7 +332,7 @@ declare module 'minmatrix' {
      * @param {TQtn} [source] - 結果を格納するクォータニオン
      * @return {TQtn} 結果のクォータニオン
      */
-    static rotate(angle: number, axis: TVec3, source: TQtn): TQtn;
+    static rotate(angle: number, axis: TVec3, source?: TQtn): TQtn;
     /**
      * ベクトルにクォータニオンを適用し返す（第三引数が与えられた場合そのベクトルに結果を代入する）
      * @param {TVec3} vec - ３つの要素を持つベクトル
@@ -335,14 +340,14 @@ declare module 'minmatrix' {
      * @param {TVec3} [source] - ３つの要素を持つベクトル
      * @return {TVec3} 結果のベクトル
      */
-    static toVecIII(vec: TVec3, qtn: TQtn, source: TVec3): TVec3;
+    static toVecIII(vec: TVec3, qtn: TQtn, source?: TVec3): TVec3;
     /**
      * 4x4 行列にクォータニオンを適用し返す（第二引数が与えられた場合その行列に結果を代入する）
      * @param {TQtn} qtn - クォータニオン
      * @param {TMat4} [source] - 4x4 行列
      * @return {TMat4} 結果の行列
      */
-    static toMatIV(qtn: TQtn, source: TMat4): TMat4;
+    static toMatIV(qtn: TQtn, source?: TMat4): TMat4;
     /**
      * ２つのクォータニオンの球面線形補間を行った結果を返す（第四引数が与えられた場合そのクォータニオンに結果を代入する）
      * @param {TQtn} qtn0 - クォータニオン
@@ -351,7 +356,7 @@ declare module 'minmatrix' {
      * @param {TQtn} [source] - 結果を格納するクォータニオン
      * @return {TQtn} 結果のクォータニオン
      */
-    static slerp(qtn0: TQtn, qtn1: TQtn, time: number, source: TQtn): TQtn;
+    static slerp(qtn0: TQtn, qtn1: TQtn, time: number, source?: TQtn): TQtn;
   }
 
   /**
