@@ -2,6 +2,7 @@ import frag from './shader.frag';
 import vert from './shader.vert';
 import GLUtil from './glUtil';
 import { Mat4 } from 'minmatrix';
+import { hsv2rgb } from './colorUtil';
 
 const canvas: HTMLCanvasElement = document.querySelector(
   '#canvas'
@@ -75,34 +76,44 @@ const program = glUtil.createProgram(vs, fs);
 
 const calcVertexPositon = (
   innerWidth: number,
-  outerWidth: number
+  outerWidth: number,
+  size: number
 ): number[] => {
   return [
-    -1.0,
-    -1.0,
+    -size,
+    -size,
     innerWidth,
-    1.0,
-    -1.0,
+    size,
+    -size,
     outerWidth,
-    1.0,
-    1.0,
+    size,
+    size,
     outerWidth,
-    -1.0,
-    1.0,
+    -size,
+    size,
     innerWidth,
-    -1.0,
-    -1.0,
+    -size,
+    -size,
     -innerWidth,
-    1.0,
-    -1.0,
+    size,
+    -size,
     -outerWidth,
-    1.0,
-    1.0,
+    size,
+    size,
     -outerWidth,
-    -1.0,
-    1.0,
+    -size,
+    size,
     -innerWidth,
   ];
+};
+
+const calcColor = (h: number, s: number, v: number, a: number): number[] => {
+  const ret: number[] = [];
+  const [r, g, b] = hsv2rgb(h, s, v);
+  for (let i = 0; i < 9; i++) {
+    ret.push(r / 255, g / 255, b / 255, a);
+  }
+  return ret;
 };
 
 const vertexIndex: number[] = [
@@ -144,48 +155,6 @@ const vertexIndex: number[] = [
   1,
 ];
 
-const colorBufferData = [
-  1.0,
-  0.0,
-  0.0,
-  1.0,
-  0.0,
-  1.0,
-  0.0,
-  1.0,
-  0.0,
-  0.0,
-  1.0,
-  1.0,
-  1.0,
-  0.0,
-  0.0,
-  1.0,
-  0.0,
-  1.0,
-  0.0,
-  1.0,
-  0.0,
-  0.0,
-  1.0,
-  1.0,
-  1.0,
-  0.0,
-  0.0,
-  1.0,
-  0.0,
-  1.0,
-  0.0,
-  1.0,
-  0.0,
-  0.0,
-  1.0,
-  1.0,
-];
-const colorBuffer: WebGLBuffer = glUtil.createVbo(colorBufferData);
-glUtil.bindVbo(colorBuffer);
-glUtil.setAttribute(program, 'vertexColor', 4);
-
 const callback = () => {
   const ibo: WebGLBuffer = glUtil.createIbo(vertexIndex);
   glUtil.bindIbo(ibo);
@@ -213,10 +182,18 @@ const callback = () => {
       for (const [i, center] of value.entries()) {
         // 同心円状に生成するほうがパフォーマンスがいい
         const vbo: WebGLBuffer = glUtil.createVbo(
-          calcVertexPositon(i / 14, (i + 1) / 14)
+          calcVertexPositon(i / 14, (i + 1) / 14, 1.0)
         );
         glUtil.bindVbo(vbo);
         glUtil.setAttribute(program, 'position', 3);
+        const h = (360 * index) / color.length;
+        const s = (i / 14) * 100;
+        const v = ((Math.max(1.5, center[1] / 2 + 5) - 1) / 10) * 100;
+        const colorBuffer: WebGLBuffer = glUtil.createVbo(
+          calcColor(h, s, v, 1.0)
+        );
+        glUtil.bindVbo(colorBuffer);
+        glUtil.setAttribute(program, 'vertexColor', 4);
 
         const mMatrix: Float32Array = glUtil.getIdentity();
         Mat4.translate(mMatrix, new Float32Array(center), mMatrix);
