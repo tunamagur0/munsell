@@ -26,6 +26,9 @@ const colors = [
   [0, 4, 6, 8, 10, 12, 12, 12, 10, 1],
   [0, 4, 8, 12, 14, 14, 12, 12, 8, 1],
 ];
+const hueMax = 10;
+const chromaMax = 14;
+const valueMax = 10;
 
 const calcEyePos = (): Float32Array => {
   return new Float32Array([
@@ -155,6 +158,18 @@ const vertexIndex: number[] = [
   1,
 ];
 
+// [color][value][chroma][pos]
+const centers = colors.map((color, i) => {
+  const angle = (i / color.length) * Math.PI * 2;
+  const x = Math.cos(angle);
+  const z = Math.sin(angle);
+  return color.map((val, j) =>
+    new Array(val + 1)
+      .fill(0)
+      .map((_, k) => [x * (k + 1), 10 - j * 2, z * (k + 1)])
+  );
+});
+
 const callback = () => {
   const ibo: WebGLBuffer = glUtil.createIbo(vertexIndex);
   glUtil.bindIbo(ibo);
@@ -168,35 +183,30 @@ const callback = () => {
   const vpMatrix: Float32Array = glUtil.multiply(pMatrix, vMatrix);
 
   gl.clear(gl.DEPTH_BUFFER_BIT | gl.COLOR_BUFFER_BIT);
-  for (const [index, color] of colors.entries()) {
-    const angle = (index / color.length) * Math.PI * 2;
-    const x = Math.cos(angle);
-    const z = Math.sin(angle);
-    const centers = color.map((val, i) =>
-      new Array(val + 1)
-        .fill(0)
-        .map((_, j) => [x * (j + 1), 10 - i * 2, z * (j + 1)])
+  for (let i = 0; i < chromaMax; i++) {
+    const vbo: WebGLBuffer = glUtil.createVbo(
+      calcVertexPositon(i / chromaMax, (i + 1) / chromaMax, 1.0)
     );
+    glUtil.bindVbo(vbo);
+    glUtil.setAttribute(program, 'position', 3);
+    for (let j = 0; j < valueMax; j++) {
+      for (let k = 0; k < hueMax; k++) {
+        if (!centers[k][j][i]) {
+          continue;
+        }
 
-    for (const value of centers) {
-      for (const [i, center] of value.entries()) {
-        // 同心円状に生成するほうがパフォーマンスがいい
-        const vbo: WebGLBuffer = glUtil.createVbo(
-          calcVertexPositon(i / 14, (i + 1) / 14, 1.0)
-        );
-        glUtil.bindVbo(vbo);
-        glUtil.setAttribute(program, 'position', 3);
-        const h = (360 * index) / color.length;
+        const h = (360 * k) / hueMax;
         const s = (i / 14) * 100;
-        const v = ((Math.max(1.5, center[1] / 2 + 5) - 1) / 10) * 100;
+        const v = ((Math.max(1.5, centers[k][j][i][1] / 2 + 5) - 1) / 10) * 100;
         const colorBuffer: WebGLBuffer = glUtil.createVbo(
           calcColor(h, s, v, 1.0)
         );
         glUtil.bindVbo(colorBuffer);
         glUtil.setAttribute(program, 'vertexColor', 4);
 
+        const angle = (k / hueMax) * Math.PI * 2;
         const mMatrix: Float32Array = glUtil.getIdentity();
-        Mat4.translate(mMatrix, new Float32Array(center), mMatrix);
+        Mat4.translate(mMatrix, new Float32Array(centers[k][j][i]), mMatrix);
         Mat4.rotate(mMatrix, -angle, new Float32Array([0, 1, 0]), mMatrix);
         const mvpMatrix: Float32Array = glUtil.multiply(vpMatrix, mMatrix);
         glUtil.setUniform(program, mvpMatrix, 'mvpMatrix');
